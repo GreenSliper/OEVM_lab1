@@ -7,6 +7,25 @@ const int breakValue = 5;
 
 using namespace std;
 
+//get char value from console
+char getChar(int banNewLine = 1)
+{
+	char line[MAXBUFFER];	//buffer
+	char curChar = ' ', result;
+	int temp;
+	do {
+		line[MAXBUFFER - 1] = '\n';
+		fgets(line, MAXBUFFER - 1, stdin);
+		temp = sscanf(line, "%c%c", &result, &curChar);
+		temp = !temp || temp < 0 || (curChar != '\n' && curChar != ' ');
+		if (temp || (banNewLine && result=='\n'))
+			printf("Error reading char. Please, try entering exactly one symbol again.\n");
+	} while (temp || (banNewLine && result == '\n')); //not a result, but a number of read values
+	if (line[MAXBUFFER - 1] != '\n') //clear garbage from console buffer
+		while ((curChar = getchar()) != '\n' && curChar != EOF);
+	return result;
+}
+
 //get integer value from console
 int getInt()
 {
@@ -19,7 +38,7 @@ int getInt()
 		temp = sscanf(line, "%d%c", &result, &curChar);
 		temp = !temp || temp < 0 || (curChar != '\n' && curChar != ' ');
 		if (temp)
-			printf("Error reading number. Please, try again.\n");
+			printf("Error reading number. Please, try input a whole number again.\n");
 	} while (temp); //not a result, but a number of read values
 	if (line[MAXBUFFER - 1] != '\n') //clear garbage from console buffer
 		while ((curChar = getchar()) != '\n' && curChar != EOF);
@@ -130,10 +149,10 @@ int main()
 		switch (choice)
 		{
 		case 1:
-			cin >> source;
-			cin.clear();
-			fflush(stdin);
+			cout << "Input one symbol:" << endl;
+			source = getChar();
 			hasSource = 1;
+			hasResult = 0;
 			break;
 		case 2:	
 			if (hasSource)
